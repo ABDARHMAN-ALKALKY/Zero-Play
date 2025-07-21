@@ -26,7 +26,33 @@
       box-shadow: 0 0 20px #00bcd4;
     }
 
-    button {
+    .controls {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 60px 60px 60px;
+      grid-template-rows: 60px 60px;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .controls button {
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #008ba3;
+    }
+
+    .back-btn {
       margin-top: 20px;
       background-color: #00bcd4;
       color: white;
@@ -37,7 +63,7 @@
       cursor: pointer;
     }
 
-    button:hover {
+    .back-btn:hover {
       background-color: #008ba3;
     }
   </style>
@@ -46,7 +72,17 @@
 
   <h1>🌀 لعبة المتاهة</h1>
   <canvas id="mazeCanvas" width="400" height="400"></canvas>
-  <button onclick="goBack()">🔙 العودة</button>
+
+  <div class="controls">
+    <div></div>
+    <button onclick="move(0, -1)">⬆️</button>
+    <div></div>
+    <button onclick="move(-1, 0)">⬅️</button>
+    <button onclick="move(0, 1)">⬇️</button>
+    <button onclick="move(1, 0)">➡️</button>
+  </div>
+
+  <button class="back-btn" onclick="goBack()">🔙 العودة</button>
 
   <script>
     const canvas = document.getElementById("mazeCanvas");
@@ -71,16 +107,12 @@
     function drawMaze() {
       for (let y = 0; y < maze.length; y++) {
         for (let x = 0; x < maze[y].length; x++) {
-          if (maze[y][x] === 1) {
-            ctx.fillStyle = "#555";
-          } else {
-            ctx.fillStyle = "#111";
-          }
+          ctx.fillStyle = maze[y][x] === 1 ? "#555" : "#111";
           ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
       }
 
-      // رسم اللاعب
+      // اللاعب
       ctx.fillStyle = "#00e676";
       ctx.beginPath();
       ctx.arc(player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2, cellSize / 3, 0, Math.PI * 2);
@@ -95,7 +127,7 @@
       const newX = player.x + dx;
       const newY = player.y + dy;
 
-      if (maze[newY][newX] === 0) {
+      if (maze[newY] && maze[newY][newX] === 0) {
         player.x = newX;
         player.y = newY;
         drawMaze();
@@ -109,6 +141,10 @@
       }
     }
 
+    function goBack() {
+      window.location.href = "home.html";
+    }
+
     document.addEventListener("keydown", (e) => {
       switch (e.key) {
         case "ArrowUp": move(0, -1); break;
@@ -117,10 +153,6 @@
         case "ArrowRight": move(1, 0); break;
       }
     });
-
-    function goBack() {
-      window.location.href = "home.html";
-    }
 
     drawMaze();
   </script>
