@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Zero Play - لعبة المتاهة</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin: 20px;
+      color: #00bcd4;
+    }
+
+    canvas {
+      border: 4px solid #00bcd4;
+      background-color: #1a1a1a;
+      box-shadow: 0 0 20px #00bcd4;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #008ba3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌀 لعبة المتاهة</h1>
+  <canvas id="mazeCanvas" width="400" height="400"></canvas>
+  <button onclick="goBack()">🔙 العودة</button>
+
+  <script>
+    const canvas = document.getElementById("mazeCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const cellSize = 40;
+    const maze = [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,0,1],
+      [1,0,1,0,1,0,1,1,0,1],
+      [1,0,1,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,1,0,0,0,1],
+      [1,1,1,1,0,1,1,1,0,1],
+      [1,0,0,1,0,0,0,1,0,1],
+      [1,0,1,1,1,1,0,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ];
+
+    let player = { x: 1, y: 1 };
+
+    function drawMaze() {
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+          if (maze[y][x] === 1) {
+            ctx.fillStyle = "#555";
+          } else {
+            ctx.fillStyle = "#111";
+          }
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+
+      // رسم اللاعب
+      ctx.fillStyle = "#00e676";
+      ctx.beginPath();
+      ctx.arc(player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2, cellSize / 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // النهاية
+      ctx.fillStyle = "#ff1744";
+      ctx.fillRect(8 * cellSize, 8 * cellSize, cellSize, cellSize);
+    }
+
+    function move(dx, dy) {
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+
+      if (maze[newY][newX] === 0) {
+        player.x = newX;
+        player.y = newY;
+        drawMaze();
+
+        if (player.x === 8 && player.y === 8) {
+          setTimeout(() => {
+            alert("🎉 فزت! وصلت إلى نهاية المتاهة!");
+            goBack();
+          }, 100);
+        }
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowUp": move(0, -1); break;
+        case "ArrowDown": move(0, 1); break;
+        case "ArrowLeft": move(-1, 0); break;
+        case "ArrowRight": move(1, 0); break;
+      }
+    });
+
+    function goBack() {
+      window.location.href = "home.html";
+    }
+
+    drawMaze();
+  </script>
+
+</body>
+</html>
