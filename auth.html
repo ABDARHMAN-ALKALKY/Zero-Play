@@ -1,101 +1,166 @@
+<!-- ملف: auth.html -->
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zero Play - دخول</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <title>Zero Play - تسجيل / إنشاء حساب</title>
   <style>
-    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
     body {
-      background: linear-gradient(to right, #0d0d1a, #001f33);
-      color: white;
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(145deg, #0d1b2a, #1b263b);
+      color: #fff;
       display: flex;
-      height: 100vh;
       justify-content: center;
       align-items: center;
+      height: 100vh;
     }
+
     .container {
-      background: rgba(0, 0, 40, 0.8);
-      padding: 30px;
+      background: #1e2a3d;
+      padding: 2rem;
       border-radius: 15px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 20px #00f2ff;
+      width: 350px;
+      box-shadow: 0 0 25px #00bcd4;
     }
+
     h2 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #00f2ff;
+      color: #00bcd4;
+      margin-bottom: 1rem;
     }
+
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .tabs button {
+      flex: 1;
+      background: #0d1b2a;
+      border: none;
+      color: #00bcd4;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tabs button.active {
+      background: #00bcd4;
+      color: #0d1b2a;
+      border-radius: 5px;
+    }
+
+    .form {
+      display: none;
+    }
+
+    .form.active {
+      display: block;
+    }
+
     input {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      background: transparent;
-      border: 1px solid #00f2ff;
-      border-radius: 10px;
-      color: white;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #00f2ff;
-      color: black;
+      padding: 10px;
+      margin-bottom: 1rem;
       border: none;
-      border-radius: 10px;
-      margin-top: 15px;
-      font-weight: bold;
-      cursor: pointer;
+      border-radius: 5px;
     }
+
+    button.submit {
+      background: #00bcd4;
+      color: #0d1b2a;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
     .message {
       text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      min-height: 20px;
+      margin-top: 1rem;
+      color: #f44336;
     }
-    .error { color: #ff5c5c; }
-    .success { color: #4caf50; }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h2>تسجيل الدخول</h2>
-    <form id="loginForm">
-      <input type="email" id="email" placeholder="البريد الإلكتروني" required />
-      <input type="password" id="password" placeholder="كلمة المرور" required />
-      <button type="submit">دخول</button>
-    </form>
-    <div class="message" id="messageBox"></div>
+    <h2>Zero Play</h2>
+    <div class="tabs">
+      <button id="loginTab" class="active">تسجيل دخول</button>
+      <button id="signupTab">إنشاء حساب</button>
+    </div>
+
+    <div id="loginForm" class="form active">
+      <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+      <input type="password" id="loginPassword" placeholder="كلمة المرور">
+      <button class="submit" onclick="login()">دخول</button>
+      <div id="loginMsg" class="message"></div>
+    </div>
+
+    <div id="signupForm" class="form">
+      <input type="email" id="signupEmail" placeholder="البريد الإلكتروني">
+      <input type="password" id="signupPassword" placeholder="كلمة المرور">
+      <button class="submit" onclick="signup()">إنشاء</button>
+      <div id="signupMsg" class="message"></div>
+    </div>
   </div>
 
   <script>
-    const loginForm = document.getElementById('loginForm');
-    const messageBox = document.getElementById('messageBox');
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
 
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+    loginTab.onclick = () => {
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+      loginForm.classList.add("active");
+      signupForm.classList.remove("active");
+    };
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+    signupTab.onclick = () => {
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+      signupForm.classList.add("active");
+      loginForm.classList.remove("active");
+    };
 
+    function signup() {
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      if (!email || !password) {
+        document.getElementById("signupMsg").textContent = "يرجى تعبئة جميع الحقول.";
+        return;
+      }
+      localStorage.setItem(email, JSON.stringify({ email, password }));
+      document.getElementById("signupMsg").style.color = "#4caf50";
+      document.getElementById("signupMsg").textContent = "تم إنشاء الحساب! يمكنك الآن تسجيل الدخول.";
+    }
+
+    function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
       const userData = JSON.parse(localStorage.getItem(email));
 
-      if (!userData || userData.password !== password) {
-        messageBox.textContent = '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة';
-        messageBox.className = 'message error';
-      } else {
-        messageBox.textContent = '✅ تم تسجيل الدخول بنجاح، جارٍ التوجيه...';
-        messageBox.className = 'message success';
-
-        setTimeout(() => {
-          window.location.href = 'games.html'; // واجهة الألعاب
-        }, 1000);
+      if (!userData) {
+        document.getElementById("loginMsg").textContent = "البريد غير مسجل.";
+        return;
       }
-    });
+
+      if (userData.password !== password) {
+        document.getElementById("loginMsg").textContent = "كلمة مرور خاطئة.";
+        return;
+      }
+
+      // نجاح تسجيل الدخول
+      sessionStorage.setItem("currentUser", email);
+      window.location.href = "home.html";
+    }
   </script>
 </body>
 </html>
