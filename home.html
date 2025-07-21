@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Zero Play - الألعاب</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #112d4e;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 20px #00bcd4;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #00bcd4;
+    }
+
+    header button {
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .game {
+      background-color: #1e3a5f;
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      transition: 0.3s;
+      box-shadow: 0 0 15px #00bcd4;
+      cursor: pointer;
+    }
+
+    .game:hover {
+      transform: scale(1.05);
+      background-color: #2a4f73;
+    }
+
+    .game h2 {
+      margin-bottom: 0.5rem;
+      color: #00d9ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #112d4e;
+      color: #aaa;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎮 Zero Play</h1>
+    <button onclick="logout()">تسجيل خروج</button>
+  </header>
+
+  <div class="content">
+    <div class="game" onclick="goToMaze()">
+      <h2>لعبة المتاهة</h2>
+      <p>ادخل واستمتع بالتحدي</p>
+    </div>
+
+    <div class="game">
+      <h2>قريباً</h2>
+      <p>لعبة جديدة قيد التطوير</p>
+    </div>
+
+    <div class="game">
+      <h2>قريباً</h2>
+      <p>ألعاب إضافية قريبًا</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Zero Play. جميع الحقوق محفوظة.
+  </footer>
+
+  <script>
+    function logout() {
+      sessionStorage.removeItem("currentUser");
+      window.location.href = "auth.html";
+    }
+
+    function goToMaze() {
+      window.location.href = "maze.html"; // لازم تنشئ هذا الملف لاحقًا
+    }
+
+    // حماية الصفحة من الدخول بدون تسجيل دخول
+    const currentUser = sessionStorage.getItem("currentUser");
+    if (!currentUser) {
+      alert("يرجى تسجيل الدخول أولاً");
+      window.location.href = "auth.html";
+    }
+  </script>
+
+</body>
+</html>
